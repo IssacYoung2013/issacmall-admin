@@ -1,0 +1,8 @@
+{
+  "name": "issacmall-admin",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:IssacYoung2013/issacmall-admin.git",
+  "author": "IssacYoung2013",
+  "license": "MIT"
+}
