@@ -1,8 +1,9 @@
 import React from 'react';
-import MUtil from 'util/mm.jsx';
+import User from 'service/user-service.jsx';
 import './index.scss';
-
+import MUtil    from 'util/mm.jsx';
 const _mm = new MUtil();
+const _user = new User();
 
 class Login extends React.Component {
 
@@ -11,6 +12,7 @@ class Login extends React.Component {
         this.state = {
             username: '',
             password: '',
+            redirect: _mm.getUrlParam('redirect') || '/'
         }
     }
 
@@ -23,18 +25,17 @@ class Login extends React.Component {
     }
 
     // 用户提交表单
-    onSubmit(e) {
-        _mm.request({
-            type:   'post',
-            url:    '/manage/user/login.do',
-            data: {
-                username : this.state.username,
-                password : this.state.password
-            }
+    onSubmit() {
+        _user.login({
+            username: this.state.username,
+            password: this.state.password
         }).then((res) => {
-
-        },(err) =>{
-
+            console.log(res);
+            console.log(this.state.redirect);
+            // this.props.history.push(thiss.state.redirect);
+        }, (err) => {
+            console.log(err);
+            // _mm.errorTips(err);
         });
     }
 
@@ -59,7 +60,7 @@ class Login extends React.Component {
                                     placeholder="请输入密码"
                                     onChange={e => this.onInputChange(e)} />
                             </div>
-                            <button type="submit"
+                            <button 
                                 className="btn btn-lg btn-primary btn-block"
                                 onClick={e => this.onSubmit(e)}>登录</button>
                         </form>

@@ -13,8 +13,8 @@ module.exports = {
     alias: {
       page: path.resolve(__dirname, 'src/page'),
       component: path.resolve(__dirname, 'src/component'),
-      util: path.resolve(__dirname, 'src/util')
-
+      util: path.resolve(__dirname, 'src/util'),
+      service: path.resolve(__dirname, 'src/service')
     }
   },
   module: {
@@ -92,7 +92,7 @@ module.exports = {
     },
     proxy: {
       '/manage': {
-        target: 'http://localhost:8088',
+        target: 'http://www.isssacmall.com:81',
         changeOrigin: true
       }
     }
