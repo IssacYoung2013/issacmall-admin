@@ -90,11 +90,12 @@ module.exports = {
     historyApiFallback: {
       index: '/dist/index.html'
     },
-    proxy: {
+    proxy: [{
       '/manage': {
-        target: 'http://www.isssacmall.com:81',
+        target: 'http://www.issacmall.com',
+        secure: false,
         changeOrigin: true
       }
-    }
+    }]
   }
 };
