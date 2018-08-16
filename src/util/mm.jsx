@@ -45,6 +45,10 @@ class MUtil {
         alert(errMsg || '好像哪里不对了~');
     }
 
+    successTips(successMsg) {
+        alert(successMsg || '操作成功~');
+    }
+
     // 本地存储
     setStorage(name,data) {
         let dataType = typeof data;

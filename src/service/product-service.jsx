@@ -10,6 +10,15 @@ class Product {
             }
         })
     }
+
+    // 变更销售状态
+    setProductStatus(productInfo) {
+        return _mm.request({
+            type:'post',
+            url: '/manage/product/set_sale_status.do',
+            data:productInfo
+        }) 
+    }
 }
 
 export default Product;

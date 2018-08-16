@@ -1,5 +1,7 @@
 import React from 'react';
 import PageTitle from 'component/page-title/index.jsx';
+import TableList from 'util/table-list/index.jsx';
+
 import { Link } from 'react-router-dom';
 import Pagination from 'util/pagination/index.jsx';
 
@@ -15,7 +17,6 @@ class ProductList extends React.Component {
         this.state = {
             list: [],
             pageNum: 1,
-            firstLoading: true
         };
     }
 
@@ -25,14 +26,10 @@ class ProductList extends React.Component {
 
     loadProductList() {
         _product.getProductList(this.state.pageNum).then(res => {
-            this.setState(res,()=>{
-                this.setState({
-                    firstLoading:false
-                });
-            });
+            this.setState(res);
         }, errMsg => {
             this.setState({
-                list:[]
+                list: []
             })
             _mm.errorTips(errMsg);
         });
@@ -47,53 +44,67 @@ class ProductList extends React.Component {
         });
     }
 
+    // 改变商品状态
+    onSetProductStatus(e,productId,currentStatus) {
+        let newStatus = currentStatus == 1 ? 2: 1,
+            confirmTips = currentStatus == 1 ? "确定要下架该商品":"确定要上架该商品";
+        if(window.confirm(confirmTips)){
+            _product.setProductStatus({
+                productId:productId,
+                status:newStatus
+            }).then(res => {
+                _mm.successTips(res);
+                this.loadProductList();
+            },errMsg=>{
+                _mm.errorTips(errMsg);
+            })
+        }
+    }
+
     render() {
 
-        let listBody = this.state.list.map((user, index) => {
-            return (<tr key={index}>
-                <td>{user.id}</td>
-                <td>{user.username}</td>
-                <td>{user.email}</td>
-                <td>{user.phone}</td>
-                <td>{new Date(user.createTime).toLocaleString()}</td>
-            </tr>);
-        });
+        let tableHeads = [
+            { name: '商品ID', width: '10%' },
+            { name: '商品信息', width: '50%' },
+            { name: '价格', width: '10%' },
+            { name: '状态', width: '15%' },
+            { name: '操作', width: '15%' },
 
-        let listError = (
-            <tr>
-                <td colSpan="5" className="text-center">
-                {this.state.firstLoading ? '正在加载...':'没有找到相应的结果~'}
-                </td>
-            </tr>
-        );
-
-        let tableBody = this.state.list.length > 0 ? listBody : listError;
-
+        ];
         return (
             <div id="page-wrapper">
                 <PageTitle title="商品列表" />
                 <div className="row">
-                    <div className="col-md-12">
-                        <table className="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>用户名</th>
-                                    <th>邮箱</th>
-                                    <th>电话</th>
-                                    <th>注册时间</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    tableBody
-                                }
-                            </tbody>
-                        </table>
-                        <Pagination current={this.state.pageNum}
-                            total={this.state.total}
-                            onChange={(pageNum) => this.onPageNumChange(pageNum)} />
-                    </div>
+                    <TableList tableHeads={tableHeads}>
+                        {
+                            this.state.list.map((product, index) => {
+                                return (<tr key={index}>
+                                    <td>{product.id}</td>
+                                    <td>
+                                        <p>{product.name}</p>
+                                        <p>{product.subtitle}</p>
+                                    </td>
+                                    <td>¥{product.price}</td>
+                                    <td>
+                                        {
+                                            <p>{product.status == 1 ? '在售' : '已下架'}</p>
+                                            <button  className="btn btn-xs btn-warning" onClick={(e) => { this.onSetProductStatus(e,product.id, product.status);}}>
+                                                {product.status == 1 ? '下架' : '上架'}
+                                                </button>
+                                        }
+                                    </td>
+                                    <td>
+                                        <Link to={`/product/detail/${product.id}`}>查看详情</Link>
+                                        <Link to={`/product/save/${product.id}`}>编辑</Link>
+
+                                    </td>
+                                </tr>);
+                            })
+                        }
+                    </TableList>
+                    <Pagination current={this.state.pageNum}
+                        total={this.state.total}
+                        onChange={(pageNum) => this.onPageNumChange(pageNum)} />
                 </div>
             </div>
         );
