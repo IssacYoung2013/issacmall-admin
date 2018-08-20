@@ -15,7 +15,8 @@ class ProductSave extends React.Component {
         super(props);
         this.state = {
             categoryId: 0,
-            parentCategoryId: 0
+            parentCategoryId: 0,
+            subImages: []
         }
     }
 
@@ -23,6 +24,18 @@ class ProductSave extends React.Component {
         console.log('categorId:' + categoryId);
         console.log('parentCategoryId:' + parentCategoryId);
 
+    }
+
+    onUploadSuccess(res) {
+        let subImages = this.state.subImages;
+        subImages.push(res);
+        this.setState({
+            subImages:subImages
+        })
+    }
+
+    onUploadError(errMsg) {
+        _mm.errorTips(errMsg || '上传图片失败');
     }
 
     render() {
@@ -71,7 +84,14 @@ class ProductSave extends React.Component {
                         <div className="form-group">
                             <label className="col-md-2 control-label">商品图片</label>
                             <div className="col-md-10">
-                                <FileUploader/>
+                                {this.state.subImages.length ? this.state.subImages.map((image, index) => {
+                                    return <img src={image.url} key={index} />
+                                }) : (<div>请上传图片</div>)
+                                }
+                            </div>
+                            <div className="col-md-10">
+                                <FileUploader onSuccess={(res) => this.onUploadSuccess(res)}
+                                    onError={(err) => this.onUploadError(err)} />
                             </div>
                         </div>
 

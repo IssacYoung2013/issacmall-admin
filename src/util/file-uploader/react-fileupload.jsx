@@ -13,7 +13,16 @@ let currentXHRID = 0
 
 class FileUpload extends React.Component {
 
-    /*类型验证*/
+    constructor(props){
+        super(props);
+        this.state = {
+            chooseBtn: {},       //选择按钮。如果chooseAndUpload=true代表选择并上传。
+            uploadBtn: {},       //上传按钮。如果chooseAndUpload=true则无效。
+            before: [],      //存放props.children中位于chooseBtn前的元素
+            middle: [],      //存放props.children中位于chooseBtn后，uploadBtn前的元素
+            after: []        //存放props.children中位于uploadBtn后的元素,
+        }
+    }
 
 
     /*根据props更新组件*/
@@ -147,7 +156,7 @@ class FileUpload extends React.Component {
             middle,
             after
         })
-    },
+    }
 
     /*触发隐藏的input框选择*/
     /*触发beforeChoose*/
@@ -155,7 +164,7 @@ class FileUpload extends React.Component {
         const jud = this.beforeChoose()
         if (jud != true && jud != undefined) return
         this.refs['ajax_upload_file_input'].click()
-    },
+    }
     /*现代浏览器input change事件。File API保存文件*/
     /*触发chooseFile*/
     commonChange(e) {
@@ -174,7 +183,7 @@ class FileUpload extends React.Component {
         this.files = files
         this.chooseFile(files)
         this.chooseAndUpload && this.commonUpload()
-    },
+    }
 
     /*执行上传*/
     commonUpload() {
@@ -314,7 +323,7 @@ class FileUpload extends React.Component {
 
         /*清除input的值*/
         this.refs['ajax_upload_file_input'].value = ''
-    },
+    }
 
     /*组装自定义添加到FormData的对象*/
     appendFieldsToFormData(formData) {
@@ -324,14 +333,14 @@ class FileUpload extends React.Component {
                 formData.append(index, field[index])
             )
         return formData
-    },
+    }
 
     /*iE选择前验证*/
     /*触发beforeChoose*/
     IEBeforeChoose(e) {
         const jud = this.beforeChoose()
         jud != true && jud != undefined && e.preventDefault()
-    },
+    }
     /*IE需要用户真实点击上传按钮，所以使用透明按钮*/
     /*触发chooseFile*/
     IEChooseFile(e) {
@@ -341,7 +350,7 @@ class FileUpload extends React.Component {
         this.chooseAndUpload && (this.IEUpload() !== false) &&
             document.getElementById(`ajax_upload_file_form_${this.IETag}${currentIEID}`).submit()
         e.target.blur()
-    },
+    }
     /*IE处理上传函数*/
     /*触发beforeUpload doUpload*/
     IEUpload(e) {
@@ -412,7 +421,7 @@ class FileUpload extends React.Component {
         /*置为非空闲*/
         IEFormGroup[currentIEID] = false
 
-    },
+    }
     /*IE回调函数*/
     //TODO 处理Timeout
     IECallback(dataType, frameId) {
@@ -439,13 +448,13 @@ class FileUpload extends React.Component {
             throw e
         }
         return dataType == 'json' ? resp.json : resp.responseText
-    },
+    }
 
     /*外部调用方法，主动触发选择文件（等同于调用btn.click()), 仅支持现代浏览器*/
     forwardChoose() {
         if (this.isIE) return false
         this.commonChooseFile()
-    },
+    }
 
     /**
      * 外部调用方法，当多文件上传时，用这个方法主动删除列表中某个文件
@@ -461,21 +470,21 @@ class FileUpload extends React.Component {
      */
     fowardRemoveFile(func) {
         this.files = func(this.files)
-    },
+    }
 
     /*外部调用方法，传入files（File API）对象可以立刻执行上传动作，IE不支持。调用随后会触发beforeUpload*/
     filesToUpload(files) {
         if (this.isIE) return
         this.files = files
         this.commonUpload()
-    },
+    }
 
     /*外部调用方法，取消一个正在进行的xhr，传入id指定xhr（doupload时返回）或者默认取消最近一个。*/
     abort(id) {
         id === undefined ?
             xhrList[currentXHRID].abort() :
             xhrList[id].abort()
-    },
+    }
 
     /*判断ie版本*/
     checkIE() {
@@ -484,7 +493,7 @@ class FileUpload extends React.Component {
         if (version < 0) return -1
 
         return parseFloat(userAgent.substring(version + 5, userAgent.indexOf(';', version)))
-    },
+    }
 
     /*生成假的IE上传进度*/
     fakeProgress() {
@@ -502,7 +511,7 @@ class FileUpload extends React.Component {
 
             return start
         }
-    },
+    }
 
     getUserAgent() {
         const userAgentString = this.props.options && this.props.options.userAgent;
@@ -511,7 +520,7 @@ class FileUpload extends React.Component {
             throw new Error('\`options.userAgent\` must be set rendering react-fileuploader in situations when \`navigator\` is not defined in the global namespace. (on the server, for example)');
         }
         return navigatorIsAvailable ? navigator.userAgent : userAgentString;
-    },
+    }
 
     getInitialState() {
         return {
@@ -521,7 +530,7 @@ class FileUpload extends React.Component {
             middle: [],      //存放props.children中位于chooseBtn后，uploadBtn前的元素
             after: []        //存放props.children中位于uploadBtn后的元素,
         }
-    },
+    }
 
     componentWillMount() {
         this.userAgent = this.getUserAgent();
@@ -531,18 +540,18 @@ class FileUpload extends React.Component {
         this.IETag = tag ? tag + '_' : ''
 
         this._updateProps(this.props)
-    },
+    }
 
     componentDidMount() {
-    },
+    }
 
     componentWillReceiveProps(newProps) {
         this._updateProps(newProps)
-    },
+    }
 
     render() {
         return this._packRender()
-    },
+    }
 
 
     /*打包render函数*/
@@ -560,14 +569,14 @@ class FileUpload extends React.Component {
             render = (
                 <div className={this.props.className} style={this.props.style}>
                     {this.state.before}
-                    <div onClick={this.commonChooseFile}
+                    <div onClick={(e) =>this.commonChooseFile(e)}
                         style={{ overflow: 'hidden', postion: 'relative', display: this.wrapperDisplay }}
                     >
                         {this.state.chooseBtn}
                     </div>
                     {this.state.middle}
 
-                    <div onClick={this.commonUpload}
+                    <div onClick={(e) => this.commonUpload(e)}
                         style={{
                             overflow: 'hidden',
                             postion: 'relative',
@@ -578,14 +587,14 @@ class FileUpload extends React.Component {
                     </div>
                     {this.state.after}
                     <input type="file" name="ajax_upload_file_input" ref="ajax_upload_file_input"
-                        style={{ display: 'none' }} onChange={this.commonChange}
+                        style={{ display: 'none' }} onChange={(e) => this.commonChange(e)}
                         {...restAttrs}
                     />
                 </div>
             )
         }
         return render
-    },
+    }
 
     /*IE多文件同时上传，需要多个表单+多个form组合。根据currentIEID代表有多少个form。*/
     /*所有不在空闲（正在上传）的上传组都以display:none的形式插入，第一个空闲的上传组会display:block捕捉。*/
@@ -643,7 +652,7 @@ class FileUpload extends React.Component {
 
             const input =
                 <input type="file" name={`ajax_upload_hidden_input_${i}`} id={`ajax_upload_hidden_input_${i}`}
-                    ref={`ajax_upload_hidden_input_${i}`} onChange={this.IEChooseFile} onClick={this.IEBeforeChoose}
+                    ref={`ajax_upload_hidden_input_${i}`} onChange={(e) => this.IEChooseFile(e)} onClick={(e) => this.IEBeforeChoose(e)}
                     style={style} {...restAttrs}
                 />
 
@@ -651,7 +660,7 @@ class FileUpload extends React.Component {
             formArr.push((
                 <form id={`ajax_upload_file_form_${i}`} method="post" target={`ajax_upload_file_frame_${i}`}
                     key={`ajax_upload_file_form_${i}`}
-                    encType="multipart/form-data" ref={`form_${i}`} onSubmit={this.IEUpload}
+                    encType="multipart/form-data" ref={`form_${i}`} onSubmit={(e) =>this.IEUpload(e)}
                     style={{ display: isShow ? 'block' : 'none' }}
                 >
                     {this.state.before}
@@ -702,7 +711,7 @@ class FileUpload extends React.Component {
 
 }
 
-FileUpload.PropTypes = {
+FileUpload.propTypes = {
 
     options: PT.shape({
         /*basics*/
