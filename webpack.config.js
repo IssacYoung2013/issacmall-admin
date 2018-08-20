@@ -93,12 +93,12 @@ module.exports = {
     disableHostCheck: false,
     proxy: {
       '/manage': {
-        target: 'http://www.issacmall.com:81',
+        target: 'http://www.issacmall.com',
         secure: false,
         changeOrigin: true,
       },
       '/user/logout.do': {
-        target: 'http://www.issacmall.com:81',
+        target: 'http://www.issacmall.com',
         secure: false,
         changeOrigin: true,
       }

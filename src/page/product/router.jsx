@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Link, Switch, Redirect } from 'react-ro
 
 import Home from 'page/home/index.jsx';
 import ProductList from 'page/product/index/index.jsx';
+import ProductSave from 'page/product/index/save.jsx';
+
 
 class ProductRouter extends React.Component {
   constructor(props) {
@@ -17,6 +19,8 @@ class ProductRouter extends React.Component {
         <Router>
           <Switch>
             <Route path="/product/index" component={ProductList} />
+            <Route path="/product/save" component={ProductSave} />
+
             <Redirect exact from="/product" to="/product/index" />
           </Switch>
         </Router>

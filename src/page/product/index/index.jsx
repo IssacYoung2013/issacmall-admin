@@ -30,9 +30,9 @@ class ProductList extends React.Component {
         listParam.pageNum = this.state.pageNum;
         listParam.listType = this.state.listType;
         // 如果搜索 需要传入搜索类型和关键字
-        if(this.state.listType === 'search') {
-            listParam.searchType =this.state.searchType;
-            listParam.keyword =this.state.searchKeyword;
+        if (this.state.listType === 'search') {
+            listParam.searchType = this.state.searchType;
+            listParam.keyword = this.state.searchKeyword;
         }
 
         _product.getProductList(listParam).then(res => {
@@ -96,7 +96,13 @@ class ProductList extends React.Component {
         ];
         return (
             <div id="page-wrapper">
-                <PageTitle title="商品列表" />
+                <PageTitle title="商品列表" >
+                    <div className="page-header-right">
+                        <Link to="/product/save" className="btn btn-primary">
+                            <i className="fa fa-plus"></i>
+                            <span>添加商品</span></Link>
+                    </div>
+                </PageTitle>
                 <ListSearch className="search-wrap" onSearch={(searchType, searchKeyword) => { this.onSearch(searchType, searchKeyword) }} />
                 <TableList tableHeads={tableHeads}>
                     {
