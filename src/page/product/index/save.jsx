@@ -5,6 +5,7 @@ import CategorySelector from 'page/product/index/category-selector.jsx';
 import Product from 'service/product-service.jsx';
 import MUtil from 'util/mm.jsx';
 import FileUploader from 'util/file-uploader/index.jsx';
+import './save.scss';
 
 const _mm = new MUtil();
 const _product = new Product();
@@ -30,12 +31,22 @@ class ProductSave extends React.Component {
         let subImages = this.state.subImages;
         subImages.push(res);
         this.setState({
-            subImages:subImages
+            subImages: subImages
         })
     }
 
     onUploadError(errMsg) {
         _mm.errorTips(errMsg || '上传图片失败');
+    }
+
+    // 删除图片
+    onImageDelete(e) {
+        let index       = e.target.inde,
+            subImages   = this.state.subImages;
+        subImages.splice(index,1);
+        this.setState({
+            subImages : subImages
+        });
     }
 
     render() {
@@ -85,11 +96,18 @@ class ProductSave extends React.Component {
                             <label className="col-md-2 control-label">商品图片</label>
                             <div className="col-md-10">
                                 {this.state.subImages.length ? this.state.subImages.map((image, index) => {
-                                    return <img src={image.url} key={index} />
+                                    return (
+                                        <div className="img-con" key={index}>
+                                            <img className="img" src={image.url} />
+                                            <i className="fa fa-close"
+                                                index={index}
+                                                onClick={(e) => this.onImageDelete(e)}></i>
+                                        </div>
+                                    );
                                 }) : (<div>请上传图片</div>)
                                 }
                             </div>
-                            <div className="col-md-10">
+                            <div className="col-md-offset-2 col-md-10 file-upload-con">
                                 <FileUploader onSuccess={(res) => this.onUploadSuccess(res)}
                                     onError={(err) => this.onUploadError(err)} />
                             </div>
