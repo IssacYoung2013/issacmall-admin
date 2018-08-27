@@ -33,10 +33,11 @@ class Product {
 
     // 检查保存商品的表单
     checkProduct(product) {
-        let resutl = {
+        let result = {
             status: true,
             msg: '验证通过'
         };
+        console.log(product);
 
         // 判断商品名称为空
         if (typeof product.name !== 'string' || product.name.length === 0) {
@@ -53,31 +54,47 @@ class Product {
             }
         }
 
-        if (typeof product.price !== 'number' || product.price < 0) {
+        if (typeof product.categoryId !== 'number' || !(product.categoryId > 0)) {
+            return {
+                status: false,
+                msg: '请输入商品的品类'
+            }
+        }
+
+        if (typeof product.price !== 'number' || !(product.price >= 0)) {
             return {
                 status: false,
                 msg: '请输入正确的商品价格'
             }
         }
 
-        if (typeof product.price !== 'number' || product.price < 0) {
+        if (typeof product.stock !== 'number' || !(product.stock >= 0)) {
             return {
                 status: false,
                 msg: '请输入正确的库存数量'
             }
         }
 
-        if (typeof product.productId !== 'number' || product.productId < 0) {
-            return {
-                status: false,
-                msg: '请输入正确的品类'
-            }
-        }
+        return result;
     }
 
     // 保存商品
     saveProduct(product) {
+        return _mm.request({
+            type: 'post',
+            url: '/manage/product/product_save.do',
+            data: product
+        })
+    }
 
+    getProduct(productId) {
+        return _mm.request({
+            type: 'post',
+            url: '/manage/product/detail.do',
+            data: {
+                productId: productId || 0
+            }
+        })
     }
 
     /**

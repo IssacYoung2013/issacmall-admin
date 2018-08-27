@@ -19,7 +19,7 @@ class ProductRouter extends React.Component {
         <Router>
           <Switch>
             <Route path="/product/index" component={ProductList} />
-            <Route path="/product/save" component={ProductSave} />
+            <Route path="/product/save/:pid" component={ProductSave} />
 
             <Redirect exact from="/product" to="/product/index" />
           </Switch>

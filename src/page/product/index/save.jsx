@@ -16,6 +16,7 @@ class ProductSave extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: this.props.match.params.pid,
             name: '',
             subtitle: '',
             categoryId: 0,
@@ -25,6 +26,32 @@ class ProductSave extends React.Component {
             stock: '',
             detail: '',
             status: 1 // 商品状态1 待售
+        }
+    }
+
+    componentDidMount() {
+        this.loadProduct();
+    }
+
+    loadProduct() {
+
+        // 有id表示编辑功能，需要表单回填
+        if (this.state.id) {
+            _product.getProduct(this.state.id).then((res) => {
+                // 加载表单详情
+                if (res.subImages.length !== 0) {
+                    let images = res.subImages.split(',');
+                    res.subImages = images.map((imgUri) => {
+                        return {
+                            uri: imgUri,
+                            url: res.imageHost + imgUri
+                        }
+                    });
+                }
+                this.setState(res);
+            }, (errMsg) => {
+                _mm.errorTips(errMsg);
+            })
         }
     }
 
@@ -84,16 +111,16 @@ class ProductSave extends React.Component {
         let product = {
             name: this.state.name,
             subtitle: this.state.subtitle,
-            categoryId: this.state.categoryId,
+            categoryId: parseInt(this.state.categoryId),
             subImages: this.getSubImagesString(),
             detail: this.state.detail,
-            price: this.state.price,
-            stock: this.state.stock,
+            price: parseFloat(this.state.price),
+            stock: parseInt(this.state.stock),
             status: this.state.status
         },
             productCheckResult = _product.checkProduct(product);
         if (productCheckResult.status) {
-            _product.saveProduct().then((res) => {
+            _product.saveProduct(product).then((res) => {
                 _mm.successTips(res);
                 this.props.history.push('/product/index');
             }, (errMsg) => {
