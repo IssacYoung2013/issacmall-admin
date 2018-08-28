@@ -25,14 +25,14 @@ class UserList extends React.Component {
 
     loadUserList() {
         _user.getUserList(this.state.pageNum).then(res => {
-            this.setState(res,()=>{
+            this.setState(res, () => {
                 this.setState({
-                    firstLoading:false
+                    firstLoading: false
                 });
             });
         }, errMsg => {
             this.setState({
-                list:[]
+                list: []
             })
             _mm.errorTips(errMsg);
         });
@@ -62,7 +62,7 @@ class UserList extends React.Component {
         let listError = (
             <tr>
                 <td colSpan="5" className="text-center">
-                {this.state.firstLoading ? '正在加载...':'没有找到相应的结果~'}
+                    {this.state.firstLoading ? '正在加载...' : '没有找到相应的结果~'}
                 </td>
             </tr>
         );

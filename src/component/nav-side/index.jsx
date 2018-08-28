@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link,NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 class NavSide extends React.Component {
     constructor(props) {
         super(props);
@@ -11,7 +11,7 @@ class NavSide extends React.Component {
                 <div className="sidebar-collapse">
                     <ul className="nav">
                         <li>
-                            <NavLink  exact  activeClassName="active-menu" to="/"><i className="fa fa-dashboard"></i>
+                            <NavLink exact activeClassName="active-menu" to="/"><i className="fa fa-dashboard"></i>
                                 <span>首页</span></NavLink>
                         </li>
                         <li className="active">
@@ -21,10 +21,10 @@ class NavSide extends React.Component {
                                 <span className="fa arrow"></span></Link>
                             <ul className="nav nav-second-level collapse in">
                                 <li>
-                                    <NavLink activeClassName="active-menu" to="/product">商品管理</NavLink>
+                                    <NavLink to="/product" activeClassName="active-menu">商品管理</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink activeClassName="active-menu" to="/product-category">品类管理</NavLink>
+                                    <NavLink to="/product-category" activeClassName="active-menu">品类管理</NavLink>
                                 </li>
                             </ul>
                         </li>

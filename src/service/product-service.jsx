@@ -37,7 +37,6 @@ class Product {
             status: true,
             msg: '验证通过'
         };
-        console.log(product);
 
         // 判断商品名称为空
         if (typeof product.name !== 'string' || product.name.length === 0) {
@@ -107,6 +106,25 @@ class Product {
             data: {
                 categoryId: parentCategoryId || 0
             }
+        })
+    }
+
+    saveCategory(category) {
+        return _mm.request({
+            type: 'post',
+            url: '/manage/category/add_category.do',
+            data: category
+        })
+    }
+
+    /**
+     * 修改品类名称
+     */
+    updateCategoryName(category){
+        return _mm.request({
+            type: 'post',
+            url: '/manage/category/set_category_name.do',
+            data: category
         })
     }
 }

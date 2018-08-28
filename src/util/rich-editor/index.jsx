@@ -1,13 +1,21 @@
 import React from 'react';
 import Simditor from 'simditor';
 import 'simditor/styles/simditor.scss';
-
+import './index.scss';
 
 // 通用富文本组件，依赖jquery
 class RichEditor extends React.Component {
 
     constructor(props) {
         super(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let detailChange = this.props.defaultDetail !== nextProps.defaultDetail;
+        if(!detailChange){
+            return;
+        }
+        this.simditor.setValue(nextProps.defaultDetail);
     }
 
     componentDidMount() {
